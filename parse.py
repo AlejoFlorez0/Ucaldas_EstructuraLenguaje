@@ -21,6 +21,7 @@ def doIt(gramatica, _lambda='λ', _eof='$'):
     # vprint(g)
 
     firstsList = []
+    followsList = []
 
     print()
     for nt in g.nonterminals:
@@ -37,6 +38,16 @@ def doIt(gramatica, _lambda='λ', _eof='$'):
     print()
     for nt, f in follow:
         print('Siguiente({}) = {}'.format(nt, f))
+        followsList.append(
+            {"name": '{}'.format(nt, g.first(nt)),
+             "follows": '{1}'.format(nt, g.first(nt))}
+        )
+
+    print("Lista de Primeros")
+    print(firstsList)
+
+    print("Lista de Siguientes")
+    print(followsList)
 
     print()
     print('Tabla Predicción')
