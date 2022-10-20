@@ -2,7 +2,8 @@
 import sys
 import argparse
 
-from functions import parse_bnf, remove_left_recursion, remove_left_factoring
+
+from functions import parse_bnf, remove_left_recursion, remove_left_factoring,predictionSet,isll1
 
 
 def doIt(gramatica, _lambda='λ', _eof='$'):
@@ -51,7 +52,15 @@ def doIt(gramatica, _lambda='λ', _eof='$'):
     print("Lista de Siguientes")
     print(followsList)
 
+
     print()
     print('Tabla Predicción')
     predictionTable = g.grammarwithoutRecursion()
     print(predictionTable)
+    
+    PredicSet=predictionSet(predictionTable,firstsList,followsList)
+    print("El conjunto Prediccion: ")
+    print(PredicSet)
+    isll1(PredicSet)
+
+    

@@ -231,3 +231,75 @@ def remove_left_factoring(grammar):
     while (check_left_factors(g)):
         g = __remove_left_factoring(g)
     return g
+
+def predictionSet(gramm,firsts,follows):
+
+    predSet=[]
+    for prod in gramm:
+        coleccs = prod.split(" ")
+        name=coleccs[0]
+        
+        for i in range(2,len(coleccs)):
+
+            if i==2:
+
+                if (coleccs[i]=='λ'):
+                    for sig in follows:
+                        if sig['name']==name:
+                            predSet.append({
+                            'name':name,
+                            'predictionSet':sig['follows']    
+                            })
+                elif coleccs[i].isupper():
+                    for prim in firsts:
+                        if prim['name']==coleccs[i]:
+                            predSet.append({
+                            'name':name,
+                            'predictionSet':prim['firsts']    
+                            })
+                elif not(coleccs[i].isupper()):
+                    
+                    predSet.append({
+                            'name':name,
+                            'predictionSet': [coleccs[i]] 
+                            })
+
+            elif coleccs[i]=='|':
+                if (coleccs[i]!='λ'):
+                    for sig in follows:
+                        if sig['name']==name:
+                            predSet.append({
+                            'name':name,
+                            'predictionSet':sig['follows']    
+                            })
+                elif coleccs[i+1].isupper():
+                    for prim in firsts:
+                        if prim['name']==coleccs[i+1]:
+                            predSet.append({
+                            'name':name,
+                            'predictionSet':prim['firsts']    
+                            })
+                elif not(coleccs[i+1].isupper()):
+                    predSet.append({
+                            'name':name,
+                            'predictionSet': [coleccs[i+1]] 
+                            })
+                break       
+                         
+    return predSet
+
+def isll1(predictionList):
+    result=[]
+    for pred in predictionList:
+        cont=0
+        for pred1 in predictionList:
+            if pred['name']==pred1['name']:
+                if pred['predictionSet']==pred1['predictionSet']:
+                    cont=1
+        result.append(cont)
+    for x in result:
+        if x!=0:
+            print("La gramatica no es LL1")
+            break
+        else:
+            print("La gramatica es LL1")
