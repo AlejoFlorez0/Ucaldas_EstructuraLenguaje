@@ -68,5 +68,6 @@ def doIt(gramatica, _lambda='λ', _eof='$'):
 
     pprint_table(g, impresionTable)
 
-    #predictionTable = g.grammarwithoutRecursion()
-    # print(predictionTable)
+    print("Alejandro González Flórez")
+    print("Marlon Stiven Aristizabal Herrera")
+    print("Jeronimo Toro Calvo")
