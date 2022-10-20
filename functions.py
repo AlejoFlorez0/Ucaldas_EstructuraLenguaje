@@ -232,74 +232,116 @@ def remove_left_factoring(grammar):
         g = __remove_left_factoring(g)
     return g
 
-def predictionSet(gramm,firsts,follows):
 
-    predSet=[]
+def predictionSet(gramm, firsts, follows):
+
+    predSet = []
     for prod in gramm:
         coleccs = prod.split(" ")
-        name=coleccs[0]
-        
-        for i in range(2,len(coleccs)):
+        name = coleccs[0]
 
-            if i==2:
+        for i in range(2, len(coleccs)):
 
-                if (coleccs[i]=='λ'):
+            if i == 2:
+
+                if (coleccs[i] == 'λ'):
                     for sig in follows:
-                        if sig['name']==name:
+                        if sig['name'] == name:
                             predSet.append({
-                            'name':name,
-                            'predictionSet':sig['follows']    
+                                'name': name,
+                                'predictionSet': sig['follows']
                             })
                 elif coleccs[i].isupper():
                     for prim in firsts:
-                        if prim['name']==coleccs[i]:
+                        if prim['name'] == coleccs[i]:
                             predSet.append({
-                            'name':name,
-                            'predictionSet':prim['firsts']    
+                                'name': name,
+                                'predictionSet': prim['firsts']
                             })
-                elif not(coleccs[i].isupper()):
-                    
-                    predSet.append({
-                            'name':name,
-                            'predictionSet': [coleccs[i]] 
-                            })
+                elif not (coleccs[i].isupper()):
 
-            elif coleccs[i]=='|':
-                if (coleccs[i]!='λ'):
+                    predSet.append({
+                        'name': name,
+                        'predictionSet': [coleccs[i]]
+                    })
+
+            elif coleccs[i] == '|':
+                if (coleccs[i] != 'λ'):
                     for sig in follows:
-                        if sig['name']==name:
+                        if sig['name'] == name:
                             predSet.append({
-                            'name':name,
-                            'predictionSet':sig['follows']    
+                                'name': name,
+                                'predictionSet': sig['follows']
                             })
                 elif coleccs[i+1].isupper():
                     for prim in firsts:
-                        if prim['name']==coleccs[i+1]:
+                        if prim['name'] == coleccs[i+1]:
                             predSet.append({
-                            'name':name,
-                            'predictionSet':prim['firsts']    
+                                'name': name,
+                                'predictionSet': prim['firsts']
                             })
-                elif not(coleccs[i+1].isupper()):
+                elif not (coleccs[i+1].isupper()):
                     predSet.append({
-                            'name':name,
-                            'predictionSet': [coleccs[i+1]] 
-                            })
-                break       
-                         
+                        'name': name,
+                        'predictionSet': [coleccs[i+1]]
+                    })
+                break
+
     return predSet
 
+
 def isll1(predictionList):
-    result=[]
+    result = []
     for pred in predictionList:
-        cont=0
+        cont = 0
         for pred1 in predictionList:
-            if pred['name']==pred1['name']:
-                if pred['predictionSet']==pred1['predictionSet']:
-                    cont=1
+            if pred['name'] == pred1['name']:
+                if pred['predictionSet'] == pred1['predictionSet']:
+                    cont = 1
         result.append(cont)
     for x in result:
-        if x!=0:
+        if x != 0:
             print("La gramatica no es LL1")
             break
         else:
             print("La gramatica es LL1")
+
+
+def __join_amb(entry):
+    return ' | '.join([str(e) for e in entry])
+
+
+def pprint_table(g, table, padding=4):
+    # put EOF at end of list
+    terminals = sorted(set(g.terminals) - {g.epsilon}) + [g.eof]
+    nonterminals = [nt for nt in g.nonterminals]
+
+    width_nt = max([len(x) for x in nonterminals])  # non_terminals width
+    width = max([len(str(p)) for p in g.iter_productions()])
+
+    amb = [len(__join_amb(x)) for x in table.values() if isinstance(x, list)]
+    if amb:
+        width = max(width, *amb)
+
+    width += padding
+    if width % 2 == 0:
+        width += 1  # Width must be odd to center correctly
+
+    print('{:{width}}'.format('', width=width_nt + 2), end='')
+    for t in terminals:
+        print('{:^{width}}'.format(t, width=width), end='')
+
+    print()
+    print('-' * ((len(terminals)) * width + width_nt))
+
+    print()
+    for x in nonterminals:
+        print('{:{width}} |'.format(x, width=width_nt), end='')
+        for t in terminals:
+            entry = table.get((x, t), '-')
+            if isinstance(entry, list):
+                entry = __join_amb(entry)
+            print('{:^{width}}'.format(str(entry), width=width), end='')
+
+        print()
+    print()

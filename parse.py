@@ -3,7 +3,7 @@ import sys
 import argparse
 
 
-from functions import parse_bnf, remove_left_recursion, remove_left_factoring,predictionSet,isll1
+from functions import parse_bnf, remove_left_recursion, remove_left_factoring, predictionSet, isll1, pprint_table
 
 
 def doIt(gramatica, _lambda='λ', _eof='$'):
@@ -52,15 +52,21 @@ def doIt(gramatica, _lambda='λ', _eof='$'):
     print("Lista de Siguientes")
     print(followsList)
 
-
-    print()
-    print('Tabla Predicción')
     predictionTable = g.grammarwithoutRecursion()
-    print(predictionTable)
-    
-    PredicSet=predictionSet(predictionTable,firstsList,followsList)
+    PredicSet = predictionSet(predictionTable, firstsList, followsList)
+    print()
     print("El conjunto Prediccion: ")
     print(PredicSet)
     isll1(PredicSet)
 
-    
+    print()
+    print('Tabla Impresión')
+    impresionTable, ambiguous = g.parsing_table()
+    if ambiguous:
+        print(
+            "El lenguaje de entrada no es LL(1) debido a que se encontraron ambigüedades.")
+
+    pprint_table(g, impresionTable)
+
+    #predictionTable = g.grammarwithoutRecursion()
+    # print(predictionTable)
