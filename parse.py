@@ -40,8 +40,8 @@ def doIt(gramatica, _lambda='λ', _eof='$'):
     for nt, f in follow:
         print('Siguiente({}) = {}'.format(nt, f))
         followsList.append(
-            {"name": '{}'.format(nt, g.first(nt)),
-             "follows": '{1}'.format(nt, g.first(nt))}
+            {"name": '{}'.format(nt, f),
+             "follows": '{1}'.format(nt, f)}
         )
 
     print()
@@ -64,7 +64,7 @@ def doIt(gramatica, _lambda='λ', _eof='$'):
     impresionTable, ambiguous = g.parsing_table()
     if ambiguous:
         print(
-            "El lenguaje de entrada no es LL(1) debido a que se encontraron ambigüedades.")
+            "El lenguaje de entrada no es LL1 debido a que se encontraron ambigüedades.")
 
     pprint_table(g, impresionTable)
 

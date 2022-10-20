@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
 from copy import copy
+from sys import flags
 
 from dependences.rule import Rule
 
@@ -266,7 +267,7 @@ def predictionSet(gramm, firsts, follows):
                     })
 
             elif coleccs[i] == '|':
-                if (coleccs[i] != 'λ'):
+                if (coleccs[i+1] == 'λ'):
                     for sig in follows:
                         if sig['name'] == name:
                             predSet.append({
@@ -285,6 +286,7 @@ def predictionSet(gramm, firsts, follows):
                         'name': name,
                         'predictionSet': [coleccs[i+1]]
                     })
+
                 break
 
     return predSet
@@ -292,19 +294,30 @@ def predictionSet(gramm, firsts, follows):
 
 def isll1(predictionList):
     result = []
+    predictionLis1 = predictionList
     for pred in predictionList:
         cont = 0
-        for pred1 in predictionList:
+        predictionLis1.remove(pred)
+        
+        for pred1 in predictionLis1:
             if pred['name'] == pred1['name']:
-                if pred['predictionSet'] == pred1['predictionSet']:
-                    cont = 1
+                for x in pred['predictionSet']:
+                    for x1 in pred1['predictionSet']:
+                        if x == x1:
+                            cont = 1
+
         result.append(cont)
+
+    flag = True
     for x in result:
         if x != 0:
-            print("La gramatica no es LL1")
+            flag = False
             break
-        else:
-            print("La gramatica es LL1")
+
+    if flag:
+        print("La gramatica es LL1")
+    else:
+        print("La gramatica no es LL1")
 
 
 def __join_amb(entry):
