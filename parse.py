@@ -16,9 +16,9 @@ def doIt(gramatica, _lambda='λ', _eof='$'):
     g = remove_left_recursion(g)
     print(g)
 
-    #vprint("\nAfter removing left-factoring:")
+    #print("\nAfter removing left-factoring:")
     g = remove_left_factoring(g)
-    # vprint(g)
+    # print(g)
 
     firstsList = []
     followsList = []
@@ -43,11 +43,15 @@ def doIt(gramatica, _lambda='λ', _eof='$'):
              "follows": '{1}'.format(nt, g.first(nt))}
         )
 
+    print()
     print("Lista de Primeros")
     print(firstsList)
 
+    print()
     print("Lista de Siguientes")
     print(followsList)
 
     print()
     print('Tabla Predicción')
+    predictionTable = g.grammarwithoutRecursion()
+    print(predictionTable)

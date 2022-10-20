@@ -223,6 +223,14 @@ class Grammar:
         s = [' '.join(p.body) for p in self.productions[x]]
         return s
 
+    def grammarwithoutRecursion(self):
+        prod_strings = []
+        for x in self.nonterminals:
+            bodies = [' '.join(p.body) for p in self.productions[x]]
+            prod_strings.append("{} -> {}".format(x, ' | '.join(bodies)))
+
+        return prod_strings
+
     def __clear_cache(self):
         self.follow.cache_clear()
 
